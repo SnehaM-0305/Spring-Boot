@@ -1,5 +1,7 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exceptions.APIException;
+import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,20 @@ public class CategoryServiceImpl implements CategoryService      {
 
     @Override
     public void createCategory(Category category) {
+        //how you will handle the scenarios in which u need a method from repository but it does not exists?
+        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if(savedCategory!=null)
+        {
+            throw new APIException("Category with the name " +category.getCategoryName() +" already exists");
+        }
         categoryRepository.save(category);
+
     }
 
     @Override
     public String deleteCategory(Long categoryID) {
         Category existingCategory = categoryRepository.findById(categoryID)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category" , "categoryId" , categoryID));
         categoryRepository.delete(existingCategory);
         return "Category with category Id " + categoryID + " deleted successfully";
 
@@ -37,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService      {
     @Override
     public Category updateCategory(Category category ,Long categoryID) {
         Category existingCategory = categoryRepository.findById(categoryID)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category" , "categoryId" , categoryID));
         existingCategory.setCategoryName(category.getCategoryName());
         return categoryRepository.save(existingCategory);
     }
