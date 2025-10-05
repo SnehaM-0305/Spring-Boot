@@ -19,8 +19,8 @@ public class CategoryController {
    private CategoryService categoryService ;
 
     @GetMapping("/api/public/categories")
-    public ResponseEntity<CategoryResponse> getAllCategories() {
-      CategoryResponse categoryResponse =  categoryService.getAllCategories() ;
+    public ResponseEntity<CategoryResponse> getAllCategories(@RequestParam(name="pageNumber") Integer pageNumber,@RequestParam(name="pageSize") Integer pageSize) {
+      CategoryResponse categoryResponse =  categoryService.getAllCategories(pageNumber,pageSize) ;
         return new ResponseEntity<>(categoryResponse , HttpStatus.FOUND);
     }
 
@@ -31,9 +31,9 @@ public class CategoryController {
     }
 
     @DeleteMapping("/api/admin/categories/{categoryId}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId){
+    public ResponseEntity<CategoryDTO> deleteCategory(@PathVariable Long categoryId){
 
-String status = categoryService.deleteCategory(categoryId);
+        CategoryDTO status = categoryService.deleteCategory(categoryId);
 return new ResponseEntity<>(status , HttpStatus.OK) ;
     }
     @PutMapping("/api/public/categories/{categoryID}")

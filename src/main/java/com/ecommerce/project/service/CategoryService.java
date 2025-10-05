@@ -5,9 +5,9 @@ import com.ecommerce.project.payload.CategoryDTO;
 import com.ecommerce.project.payload.CategoryResponse;
 
 public interface CategoryService {
-CategoryResponse getAllCategories();
+CategoryResponse getAllCategories(Integer pageNumber , Integer pagesize);
 CategoryDTO createCategory(CategoryDTO categoryDTO);
-String deleteCategory(Long categoryID);
+    CategoryDTO deleteCategory(Long categoryID);
     CategoryDTO updateCategory(CategoryDTO categoryDTO ,Long categoryID);
 
 }
